@@ -66,8 +66,8 @@ function SpikingSynapse(Lee::SparseMatrixCSC{Float32, Int64},Lei::SparseMatrixCS
     cnt = length(total)
     Ipop = SNN.IFNF(;N = pop_size, param = SNN.IFParameter())
     Epop = SNN.IFNF(;N = pop_size, param = SNN.IFParameter())
-    Noisey = SNN.IF(;N = cnte, param = SNN.IFParameter())
-
+    #Noisey = SNN.IF(;N = cnte, param = SNN.IFParameter())
+    #=
     σ, p = 60*0.27/40 , 0.005
     wnoise = σ * sprand(cnte, cnte, p)
     rowptr, colptr, I, J, index, W = dsparse(wnoise)
@@ -82,7 +82,7 @@ function SpikingSynapse(Lee::SparseMatrixCSC{Float32, Int64},Lei::SparseMatrixCS
     fireI, fireJ = Noisey.fire, Ipop.fire    
     g = getfield(Noisey, :ge)
     NoisyInputSynInh = SpikingSynapse(;@symdict(rowptr, colptr, I, J, index, W, fireI, fireJ, g)..., kwargs...)
-
+    =#
 
     @assert maximum(Lii) <= 0.0
     @assert maximum(Lei) >= 0.0
@@ -108,7 +108,7 @@ function SpikingSynapse(Lee::SparseMatrixCSC{Float32, Int64},Lei::SparseMatrixCS
     fireI, fireJ = Ipop.fire, Epop.fire
     g = getfield(Ipop, :gi)
     LieSyn = SpikingSynapse(;@symdict(rowptr, colptr, I, J, index, W, fireI, fireJ, g)..., kwargs...)
-    (NoisyInputSynInh,NoisyInputSyn,LeeSyn,LeiSyn,LiiSyn,LieSyn,Epop,Ipop,Noisey)
+    (NoisyInputSynInh,NoisyInputSyn,LeeSyn,LeiSyn,LiiSyn,LieSyn,Epop,Ipop)#,Noisey)
 end
 
 function forward!(c::SpikingSynapse, param::SpikingSynapseParameter)
@@ -136,6 +136,8 @@ function plasticity!(c::SpikingSynapse, param::SpikingSynapseParameter, dt::Floa
             end
         end
     end
+
+    # https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1000180
     @inbounds for i in 1:(length(rowptr) - 1)
         if fireI[i]
             for st in rowptr[i]:(rowptr[i+1] - 1)

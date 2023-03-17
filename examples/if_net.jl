@@ -5,10 +5,18 @@ using SparseArrays
 import LinearAlgebra.normalize!
 using OnlineStats
 using Plots
+using JLD2
 
 function makeNetGetTimes()
-    scale = 1.0/20.0
-    @time (_,Lee,Lie,Lei,Lii),Ne,Ni = SNN.potjans_layer(scale)
+    scale = 1#1.0/200.0
+    if !isfile("potjans_full_scale.jld2")
+
+        @time (Lee,Lie,Lei,Lii),Ne,Ni = SNN.potjans_layer(scale)
+        @save "potjans_full_scale.jld2" Lee Lie Lei Lii Ne Ni
+
+    else
+        @load "potjans_full_scale.jld2" Lee Lie Lei Lii Ne Ni
+    end
     @time (NoisyInputSynInh,NoisyInputSyn,LeeSyn,LeiSyn,LiiSyn,LieSyn,E,I,Noisy) = SNN.SpikingSynapse(Lee,Lei,Lii,Lie)
     print("wiring done")    
     P = [E,I,Noisy] # populations     

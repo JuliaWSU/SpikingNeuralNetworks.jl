@@ -12,7 +12,7 @@ using StatsPlots
 #using Plots
 
 #using StaticArrays
-include("genPotjans.jl")
+include("genPotjansInPlace.jl")
 
 include("unit.jl")
 include("main.jl")
