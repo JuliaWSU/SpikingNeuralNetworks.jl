@@ -46,7 +46,7 @@ function SpikingSynapse(w,pre, post, sym)
     #@show(size(w))
     fireI, fireJ = post.fire, pre.fire
     g = getfield(post, sym)
-    SpikingSynapse(rowptr, colptr, I, J, index, W, fireI, fireJ, g,...)
+    SpikingSynapse(rowptr, colptr, I, J, index, W, fireI, fireJ, g)
 end
 
 

@@ -193,25 +193,25 @@ function build_matrix_prot!(Lee::SparseMatrixCSC{Float32, Int64},Lie::SparseMatr
         @inbounds for (j,(syn1,v1)) in enumerate(zip(syn_pol,cumvalues))
             @inbounds for src in v
                 @inbounds for tgt in v1
-                    prob = conn_probs[i,j]
-                    if rand()<prob
-                        if syn0==1
-                            if syn1==1 
-                                setindex!(Lee,jee, src,tgt)
+                    if v!=v1
+                        prob = conn_probs[i,j]
+                        if rand()<prob
+                            if syn0==1
+                                if syn1==1 
+                                    setindex!(Lee,jee, src,tgt)
+                                elseif syn1==0# meaning if the same as a logic: Inhibitory post synapse  is true                   
+                                    setindex!(Lei,jei, src,tgt)
+                                end
+                            elseif syn0==0         
+                                if syn1==1 
+                                    setindex!(Lie,wig, src,tgt)
+                                elseif syn1==0
+                                    setindex!(Lii,wig, src,tgt)
 
-                            elseif syn1==0# meaning if the same as a logic: Inhibitory post synapse  is true                   
-                                setindex!(Lei,jei, src,tgt)
-                            end
-                        elseif syn0==0         
-                            if syn1==1 
-  
-                                setindex!(Lie,wig, src,tgt)
-                            elseif syn1==0
-                                setindex!(Lii,wig, src,tgt)
+                                end
 
-                            end
-
-                        end 
+                            end 
+                        end
                     end
                 end
             end            
@@ -242,7 +242,7 @@ function make_proj(xx,pop)
     fireI, fireJ = pop.fire, pop.fire
     g = getfield(pop, :ge)
     SpikingSynapse(w,pre, post, sym)
-    syn = SpikingSynapse(rowptr, colptr, I, J, index, W, fireI, fireJ, g,...)
+    syn = SpikingSynapse(rowptr, colptr, I, J, index, W, fireI, fireJ, g)
     return syn
     #return SpikingSynapse(;@symdict(rowptr, colptr, I, J, index, W, fireI, fireJ, g)..., kwargs...)
 end
