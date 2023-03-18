@@ -6,9 +6,11 @@ import LinearAlgebra.normalize!
 using OnlineStats
 using Plots
 using JLD2
+using UnicodePlots
+#unicodeplots()
 
 function makeNetGetTimes()
-    scale = 1#1.0/200.0
+    scale = 1/100.0#1.0/200.0
     if !isfile("potjans_full_scale.jld2")
 
         @time (Lee,Lie,Lei,Lii),Ne,Ni = SNN.potjans_layer(scale)

@@ -40,6 +40,16 @@ function SpikingSynapse(pre, post, sym; σ = 0.0, p = 0.0, kwargs...)
 end
 
 
+function SpikingSynapse(w,pre, post, sym)
+    #w = σ * sprand(post.N, pre.N, p)
+    rowptr, colptr, I, J, index, W = dsparse(w)
+    #@show(size(w))
+    fireI, fireJ = post.fire, pre.fire
+    g = getfield(post, sym)
+    SpikingSynapse(rowptr, colptr, I, J, index, W, fireI, fireJ, g,...)
+end
+
+
 function SpikingSynapse(Lee::SparseMatrixCSC{Float32, Int64},Lei::SparseMatrixCSC{Float32, Int64},Lii::SparseMatrixCSC{Float32, Int64},Lie::SparseMatrixCSC{Float32, Int64}, kwargs...)
     inhib = Lii+Lie # total inhibitory population
     cnte=0
