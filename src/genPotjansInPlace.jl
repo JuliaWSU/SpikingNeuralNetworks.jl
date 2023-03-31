@@ -72,7 +72,6 @@ Ideally iteration could flatten to support the readability of subsequent code.
 function index_assignment!(item::NTuple{4, Int64}, g_strengths::Vector{Float64}, lxx::SparseMatrixCSC{Float32, Int64})#,lee::Vector{Vector{Tuple{Int64, Int64}}},lie::Vector{Vector{Tuple{Int64, Int64}}}, lii::Vector{Vector{Tuple{Int64, Int64}}}, lei::Vector{Vector{Tuple{Int64, Int64}}})
     # excitatory weights.
     (jee,_,jei,_) = g_strengths 
-    #print("hello worlds")
     # Relative inhibitory synaptic weight
     wig = -20*4.5
     (src,tgt,syn0,syn1) = item
