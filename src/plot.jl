@@ -75,7 +75,7 @@ function raster(P::Array)
     plt = scatter(X, Y, m = (1, :black), leg = :none,
                   xaxis=("t", (0, Inf)), yaxis = ("neuron",))
     y0 = y0[2:end-1]
-    !isempty(y0) && hline!(plt, cumsum(y0), linecolor = :red)
+    #!isempty(y0) && hline!(plt, cumsum(y0), linecolor = :red)
     return plt
 end
 
@@ -125,7 +125,7 @@ function rateplot(P::Array, sym)
     R = vcat([rateplot(p, sym) for p in P]...)
     y0 = [p.N for p in P][2:end-1]
     plt = heatmap(flipdim(R, 1), leg = :none)
-    !isempty(y0) && hline!(plt, cumsum(y0), line = (:black, 1))
+    #!isempty(y0) && hline!(plt, cumsum(y0), line = (:black, 1))
     plt
 end
 

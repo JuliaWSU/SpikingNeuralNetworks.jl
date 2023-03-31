@@ -241,7 +241,7 @@ function make_proj(xx,pop)
     rowptr, colptr, I, J, index, W = dsparse(xx)
     fireI, fireJ = pop.fire, pop.fire
     g = getfield(pop, :ge)
-    SpikingSynapse(w,pre, post, sym)
+    SpikingSynapse(W,pre, post, sym)
     syn = SpikingSynapse(rowptr, colptr, I, J, index, W, fireI, fireJ, g)
     return syn
     #return SpikingSynapse(;@symdict(rowptr, colptr, I, J, index, W, fireI, fireJ, g)..., kwargs...)

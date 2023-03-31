@@ -1,12 +1,12 @@
-using Plots
+#using Plots
 using SpikingNeuralNetworks
 SNN.@load_units
 
 include("genPotjans.jl")
 Ne = 800;      Ni = 200
 
-E = SNN.IZ(;N = Ne, param = SNN.IZParameter(;a = 0.02, b = 0.2, c = -65, d = 8))
-I = SNN.IZ(;N = Ni, param = SNN.IZParameter(;a = 0.1, b = 0.2, c = -65, d = 2))
+E = SNN.IF(;N = Ne, param = SNN.IZParameter())#;a = 0.02, b = 0.2, c = -65, d = 8))
+I = SNN.IF(;N = Ni, param = SNN.IZParameter())#;a = 0.1, b = 0.2, c = -65, d = 2))
 
 EE = SNN.SpikingSynapse(E, E, :v; σ = 0.5,  p = 0.8)
 EI = SNN.SpikingSynapse(E, I, :v; σ = 0.5,  p = 0.8)
