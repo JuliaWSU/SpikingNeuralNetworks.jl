@@ -47,8 +47,6 @@ function potjans_params(ccu, scale=1.0::Float64)
         end
     end
     syn_pol = SVector{8,Int64}(syn_pol)
-    #@show(cum_array)
-    #net = NetParameter(syn_pol,conn_probs,cumulative,layer_names,columns_conn_probs)
     return (cum_array,ccu,layer_names,conn_probs,syn_pol)
 end
 
