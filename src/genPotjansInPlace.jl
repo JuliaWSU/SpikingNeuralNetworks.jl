@@ -1,29 +1,12 @@
-#using Distributions
 using SparseArrays
 using StaticArrays
 using ProgressMeter
-#using Plots
 using UnicodePlots
-
-#unicodeplots()
-#using Base.Threads: @spawn, fetch, threadid, nthreads
-#@show nthreads()
-#using Distributed
 
 """
 This file consists of a function stack that seemed necessary to achieve a network with Potjans like wiring in Julia using TrainSpikeNet.jl to simulate.
 This code draws heavily on the PyNN OSB Potjans implementation code found here:
 https://github.com/OpenSourceBrain/PotjansDiesmann2014/blob/master/PyNN/network_params.py#L139-L146
-"""
-
-#function ploop(f, itr,w0Weights,g_strengths,Lee,Lie,Lii,Lei)
-#    map(fetch, map(i -> @spawn(f(i,w0Weights,g_strengths,Lee,Lie,Lii,Lei)), itr))
-    #map(x -> index_assignment!(x,w0Weights,g_strengths,Lee,Lie,Lii,Lei),just_iterator) 
-#end
-
-
-
-"""
 Hard coded Potjans parameters follow.
 and then the function outputs adapted Potjans parameters.
 """
