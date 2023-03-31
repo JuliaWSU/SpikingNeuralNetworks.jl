@@ -52,7 +52,7 @@ end
 
 
 """
-An optional container that is not even used yet.
+An optional container that is not yet utilized.
 """
 struct NetParameter 
     syn_pol::Vector{Float32}
@@ -60,10 +60,6 @@ struct NetParameter
     cumulative::Dict{String, Vector{Int64}}
     layer_names::Vector{String}
     columns_conn_probs::SubArray{Float32, 1, Matrix{Float32}, Tuple{Base.Slice{Base.OneTo{Int64}}, Int64}, true}
-    #function NetParameter()
-    #    (cumulative,ccu,layer_names,columns_conn_probs,conn_probs,syn_pol) = potjans_params(ccu, scale=1.0::Float64)
-    #    # = new()
-    #end
 end
 
 
