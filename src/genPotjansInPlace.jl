@@ -73,16 +73,7 @@ This function contains synapse selection logic seperated from iteration logic fo
 Used inside the nested iterator inside build_matrix.
 Ideally iteration could flatten to support the readability of subsequent code.
 """
-
-#index_assignment!(::NTuple{4, Int64}, ::SparseMatrixCSC{Float64, Int64}, ::Vector{Float64}, ::SparseMatrixCSC{Float32, Int64}, ::SparseMatrixCSC{Float32, Int64}, ::SparseMatrixCSC{Float32, Int64}, ::SparseMatrixCSC{Float32, Int64}, ::Vector{Any})
-#Closest candidates are:
-#index_assignment!(::NTuple{4, Int64}, ::SparseMatrixCSC{Float64, Int64}, ::Vector{Float64}, ::SparseMatrixCSC{Float32, Int64}, ::SparseMatrixCSC{Float32, Int64}, ::SparseMatrixCSC{Float32, Int64}, ::SparseMatrixCSC{Float32, Int64}) 
-#@ Base.Docs docs/Docs.jl:240
-#ERROR: LoadError: MethodError: no method matching index_assignment!(::Int64, ::Vector{Float64}, ::SparseMatrixCSC{Float32, Int64}, ::Vector{Vector{Vector{Tuple{Int64, Int64}}}}, ::Vector{Vector{Vector{Tuple{Int64, Int64}}}}, ::Vector{Vector{Vector{Tuple{Int64, Int64}}}}, ::Vector{Vector{Vector{Tuple{Int64, Int64}}}})
-
-
 function index_assignment!(item::NTuple{4, Int64}, g_strengths::Vector{Float64}, lxx::SparseMatrixCSC{Float32, Int64})#,lee::Vector{Vector{Tuple{Int64, Int64}}},lie::Vector{Vector{Tuple{Int64, Int64}}}, lii::Vector{Vector{Tuple{Int64, Int64}}}, lei::Vector{Vector{Tuple{Int64, Int64}}})
-    #, Float32}}
     # excitatory weights.
     (jee,_,jei,_) = g_strengths 
     #print("hello worlds")
@@ -91,63 +82,30 @@ function index_assignment!(item::NTuple{4, Int64}, g_strengths::Vector{Float64},
     (src,tgt,syn0,syn1) = item
     if syn0==1
         if syn1==1            
-            #setindex!(w0Weights, jee, src,tgt)    
             setindex!(lxx,jee, src,tgt)
-            #append!(lee,(src,tgt))
-            #@assert lee[src,tgt]>=0.0
 
         elseif syn1==0# meaning if the same as a logic: Inhibitory post synapse  is true                   
-            #setindex!(w0Weights, jei, src,tgt)
             setindex!(lxx, jei, src,tgt)
-            #append!(lei,(src,tgt))
-
-            #@assert lei[src,tgt]>=0.0
 
         end
     elseif syn0==0# meaning if the same as a logic: Inhibitory post synapse  is true   
         if syn1==1
-            #setindex!(w0Weights, wig, src,tgt)
             setindex!(lxx, wig, src,tgt)
-            #append!(lie,(src,tgt))
 
-            #@assert w0Weights[src,tgt]<=0.0
-            #@assert lie[src,tgt]<=0.0
         elseif syn1==0# eaning meaning if the same as a logic: if occursin("I",k1)      is true               
             @assert syn1==0
-            #setindex!(w0Weights, wig, src,tgt)
             setindex!(lxx,wig, src,tgt)
-            #append!(lii,(src,tgt))
 
-            #@assert w0Weights[src,tgt]<=0.0
             @assert syn1==0
-            #@assert lii[src,tgt]<=0.0
 
         end
     end
 end
-
-#index_assignment!(item::NTuple{4, Int64}, w0Weights::SparseMatrixCSC{Float64, Int64}, g_strengths::Vector{Float64}, lee::SparseMatrixCSC{Float32, Int64}, lie::SparseMatrixCSC{Float32, Int64}, lii::SparseMatrixCSC{Float32, Int64}, lei::SparseMatrixCSC{Float32, Int64}) = index_assignment!(item::NTuple{4, Int64})
-
-#function build_matrix(cumulative::Dict{String, Vector{Int64}}, conn_probs::Matrix{Float32}, Ncells::Int32, g_strengths::Vector{Float64},syn_pol::Vector{Int64})    
 function build_matrix!(Lxx::SparseMatrixCSC{Float32, Int64},cumvalues, conn_probs::StaticArraysCore.SMatrix{8, 8, Float64, 64}, Ncells::Int32, syn_pol::StaticArraysCore.SVector{8, Int64},g_strengths::Vector{Float64})
-    #w0Weights = spzeros(Float64, (Ncells, Ncells))
-
-    #Lee = MMatrix{(Ncells,Ncells),Float32}(zeros(Ncells, Ncells))
-    #@show(Lee)
-    #Lee = {Tuple{Ncells,Ncells},Float32} #,2,9}
-
-    #Lee = @MArray zeros((Ncells, Ncells))#,2,9}
-    #Lee = MArray{Tuple{Ncells,Ncells},Float32}(zeros(Float32, (Ncells, Ncells))) #,2,9}
-    #::Vector{Any}, ::Vector{Any}, ::Vector{Any}
-    #Lii = spzeros(Float32, (Ncells, Ncells))
-    #Lei = spzeros(Float32, (Ncells, Ncells))
-    #Lie = spzeros(Float32, (Ncells, Ncells))
-   # MArray
     ##
     # use maybe threaded paradigm.
     ##
     #Threads.@threads for i = 1:10
-    #just_iterator=[]
     @inbounds for (i,(syn0,v)) in enumerate(zip(syn_pol,cumvalues))
         @inbounds for src in v
             @inbounds for (j,(syn1,v1)) in enumerate(zip(syn_pol,cumvalues))
@@ -156,7 +114,6 @@ function build_matrix!(Lxx::SparseMatrixCSC{Float32, Int64},cumvalues, conn_prob
                         prob = conn_probs[i,j]
                         if rand()<prob
                             item = src,tgt,syn0,syn1
-                            #append!(just_iterator,item)
                             index_assignment!(item,g_strengths,Lxx)#,Lee,Lie,Lii,Lei)
                         end
                     end
@@ -209,14 +166,7 @@ end
 
 
 
-#function SpikingSynapse(w,pre, post, sym)
-    #w = σ * sprand(post.N, pre.N, p)
-#    rowptr, colptr, I, J, index, W = dsparse(w)
-    #@show(size(w))
-#    fireI, fireJ = post.fire, pre.fire
-#    g = getfield(post, sym)
-#    SpikingSynapse(rowptr, colptr, I, J, index, W, fireI, fireJ, g,...)
-#end
+
 
 function make_proj(xx,pop)
     rowptr, colptr, I, J, index, W = dsparse(xx)
